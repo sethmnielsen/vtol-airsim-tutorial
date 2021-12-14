@@ -6,8 +6,6 @@ This chapter will be a detailed guide involving the setup, configuration, and ba
 
 All instructions throughout this text are written for Linux users. The instructions have been tested on Arch Linux and Ubuntu 20.04 --- the latest Long Term Support (LTS) release as of this writing --- and are written with a focus on Ubuntu users.
 
-% The setup instructions for extending the capabilities of AirSim are covered in Chapter~\ref{chp:extending}, and setup for the Unreal Editor is covered in Section~\ref{sec:unreal_setup}.
-
 If this is your first time using AirSim, regardless of your use case, it is recommended that you follow the setup guide described in this chapter before continuing to the advanced chapters. This will help you to be aware of the various components involved in a complete simulation environment, which will be very beneficial knowledge when debugging a problem or attempting to add functionality to the sim later.
 
 \section{Description of AirSim}\label{sec:description_airsim}
@@ -75,7 +73,6 @@ If you haven't used a Python virtual environment before, it is very easy to crea
 
 It is strongly recommended that you create an entirely fresh Python virtual environment specifically for AirSim. As of this writing, the \ci{airsim} Python package has a dependency on a deprecated and very old package named \ci{msgpack-rpc-python}, which itself has other outdated dependencies that can create problems if you integrate it with your other Python virtual environments, or your user-wide or system-wide Python environments.
 
-% \subsubsection{Make the Virtual Environment}
 You can place the virtual environment wherever you like. It is common to create a folder dedicated to storing virtual environments, often in the user's home directory. The following instructions will create a directory named \ci{.virtualenvs} in the home directory; feel free to replace the path with whichever path and directory name you choose.
 
 First, create a directory to store virtual environments. If you already have a directory that fulfills this purpose, skip this step.
@@ -89,7 +86,6 @@ First, create a directory to store virtual environments. If you already have a d
 \end{minttcb}
 This will create a folder at the current working directory named \ci{airsim} containing a brand new virtual environment. Note that a virtual environment can only contain a single version of Python, and the above command will create a virtual environment according to whichever Python version the \ci{python3} command points to on your system. If you need to some other Python version, replace the number 3 with the specific version you need. For example, if you need to use Python 3.9 but \ci{python3} points to Python 3.8 (verify with the command \ci{python3 --version}), replace \ci{python3} in the above command with \ci{python3.9}. \textit{Warning: be sure you are using Python 3. Do not attempt to use Python 2 with AirSim}.
 
-% \subsubsection{Activate the Virtual Environment}
 To activate the new virtual environment, you need to source its \ci{activate} script, which can be done with the following command.
 \begin{minttcb}{bash}
     source ~/.virtualenvs/airsim/bin/activate

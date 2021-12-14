@@ -22,8 +22,6 @@ As explained in Section~\ref{sec:definitions}, a \textit{mesh} is the collection
 
 Before we teach how to create a custom mesh, we wish to reiterate that the mesh of a vehicle is separate from the aircraft's actual dynamic model. It is simply a visual representation of the aircraft, which may or may not be an accurate representation of the vehicle's dynamics, current kinematic state, control outputs, etc. It is up to the developer to decide how the underlying model should affect the mesh, and to do the necessary work for accomplishing that. Customizing the mesh of a vehicle is a rather complicated and laborious task, even for simple cases. Therefore, you should first consider whether the needs of your project do indeed require a custom aircraft mesh or whether changing the model of the aircraft --- i.e., parameters such as mass, aerodynamic coefficients, the placement of motors, etc. --- would be sufficient. If you only need to change the model, see the VTOL-AirSim GitHub repo for instructions on how to do that.
 
-% If you only need to change the model, see Appendix~\ref{apdx:add_configuration} for instructions on how to get started.
-
 \subsection{Obtain a Mesh from the Internet}
 Modifying the geometry of a mesh is not a straightforward process. We therefore recommend seeking online for a mesh that fits your project well and requires the least amount of modifications as possible. There is a large and ever-growing number of 3D meshes available on the internet which have been created and shared by other people. In the vast majority of cases, obtaining an off-the-shelf mesh that works for your use case will save you a considerable amount of time and effort.
 
@@ -109,8 +107,6 @@ A new editor window will open titled \textbf{FbxScene\_aircraft}. We will discus
 
 The various materials and the component meshes for the tiltrotor aircraft were originally defined in Blender, and Blender exported data about the parts and materials of the mesh into FBX format.  When Unreal Editor imported the FBX file, it tried to interpret the data and create assets that represent what is contained in the data. This process isn't perfect, and you may find that there are discrepancies between what is you can see in the scene in Blender compared with what is generated in UE4 by importing the FBX file. In this example, we won't import any textures; however, in general, you can also import the texture files supplied for a mesh (in the form of image files) separately and apply them in UE4. An easy way to change the look of the aircraft is by making simple modifications to the materials, such as color, roughness, or how metallic they look. UE4 comes with its own Material Editor, so this method allows for changing the look of the aircraft mesh inside Unreal Editor rather than requiring external tools for editing.
 
-% You now have the tiltrotor mesh assets in your project, but they are not yet ready to be used in a simulation. While you could drag and drop any of the Static Mesh components into your level to become StaticMeshActors, without any \CC code or Blueprints (explained in the next section, Section~\ref{sec:blueprint}) to tell those Actors what to do, they will be nothing more than static props in the scene. Try this experiment for yourself, then continue to the next section to learn how we can actually use a custom mesh in a VTOL-AirSim simulation.
-
 \section{Make a Custom Blueprint}\label{sec:blueprint}
 In Unreal Engine, \textit{Blueprints} is a visual scripting system that is used to accomplish a broad range of tasks. It is a way to do visual programming in that virtually anything that the UE4 \CC libraries can do can be done using Blueprints, and vice versa. Nevertheless, some things are more easily done in Blueprints, while others are more easily done in \CC code. If you are familiar with the \textit{LabView} visual programming system from National Instruments, they share some similarities. For our purposes of creating a controllable aircraft, you can also think of it as having similarities with what are called \textit{assemblies} in some CAD software. In addition, a Blueprint is interchangeably called a \textit{Blueprint Class} because it is a class in the same sense of the word's meaning in \CCd. You create an \textit{instance} of a Blueprint Class by spawning or placing an Actor in the level of that Blueprint Class. As an example, there is one \ci{TiltrotorPawn} \CC class and one \ci{BP_TiltrotorPawn} Blueprint for the tiltrotor vehicle, but we can spawn one or more tiltrotor vehicles in a simulation where each one has a different name, a different state, etc.
 
@@ -170,7 +166,6 @@ In \ci{BP_HomerPawn}, we simply need to have \ci{BladeL/R} be the outputs of the
 Once you have a connection from the \textbf{New Updated Component} terminal of the left box to \textbf{Blade L} and a connection from the right box to \textbf{Blade R}, you are finished with the Blueprint. Save your changes.
 
 \section{Perform a Test Flight}
-% We are ready to perform the first test flight of the Homer aircraft in the Unreal Editor. First, we need to tell AirSim that we have a different Blueprint than the default that we want to use. We can do this in the \ci{settings.json} file for AirSim using the \ci{PawnPaths} setting. Create a new \ci{settings.json} file at the path \ci{~/Documents/AirSim} on your machine and give it the following content:
 We are ready to perform the first test flight of the Homer aircraft in the Unreal Editor. First, you will need to place the following settings in your \ci{settings.json} file:
 \begin{minttcb}[title={AirSim Settings For Custom HomerPawn Aircraft}]{json}
 {
@@ -232,21 +227,3 @@ This completes our full custom aircraft example. In the next chapter, we show ho
         The custom Homer aircraft flying in the Blocks world as it hits a wall.}%
     \label{fig:homerpawn_flight}
 \end{figure}
-
-% First, go to \ci{Blocks_test/Plugins/vtol-AirSim/Source/Vehicles}. Create a copy of the \ci{Tiltrotor} folder and name it \ci{Homer}. In \ci{Homer}, there should be eight files, where each one contains \ci{Tiltrotor} in some part of its name. Rename each file by replacing \ci{Tiltrotor} with \ci{Homer}; for example, rename the files to be \ci{HomerPawn.h}, \ci{SimModeWorldHomer.cpp}, \ci{HomerPawnEvents.h}, etc.
-
-% Next, open VS Code in the folder \ci{Homer}. Press the keys \texttt{Ctrl+Shift+F} to search across all files in the opened directory. Type \texttt{Tiltrotor} into the \textbf{Search} box. Click the small arrow to the left of the search box to reveal the \textbf{Replace} box. Enter \texttt{Homer} as the replacement term. Click the \textbf{Replace All} icon to the right of the \textbf{Replace} box, or press the keys \texttt{Ctrl+Alt+Enter}. Click \textbf{Replace} in the dialog that appears. And with that, you now have \CC classes for \ci{HomerPawn} that can compile without errors.
-
-% \subsection{Correct Names of Engine Components}
-% Now we need to fix the names of the engine components. In VS Code, open the file \ci{HomerPawn.cpp} and find the two lines containing the strings \ci{"Engine_L"} and \ci{"Engine_R"}. Change each string to be \ci{"GondolaL"} and \ci{"GondolaR"}, respectively. Notice the two lines near it containing the strings \ci{"Rotation_L"} and \ci{"Rotation_R"}; this is also where the Rotating Movement Components that we discussed in Section~\ref{sec:ue4_blueprint_setupprop} are specified. We don't need to change those strings because the component names remain the same in \ci{BP_HomerPawn}. Note also that these two arrays of components are looped over in the function \ci{SetRotorRenderedStates} later on in the file, where their values are set by according to the data contained in the vector \ci{rotor_infos}, which ultimately comes from AirLib.
-
-
-
-% \subsection{Add Workaround to \ci{SimHUD.cpp}}
-% There is one more file that we need to change. The folder \ci{vtol-AirSim/Source/SimHUD} contains a file named \ci{SimHUD.cpp}. Open this file in VS Code. In this file, the \ci{SimMode} setting from the user's \ci{settings.json} file is read, and depending on its value, it will spawn one of the vehicle types of VTOL-AirSim; or rather, \ci{ASimModeWorldMultirotor/Tiltrotor} for the aerial vehicles.
-
-% We need VTOL-AirSim to spawn \ci{}
-
-
-% \subsubsection{When Editing or Creating a Mesh is Required}
-% If for any reason you find that you must make modifications to a mesh, then you will need to use 3D modeling software to do so. We define \textit{edit a mesh} in this context to mean modifying the geometry of a mesh, the organization of its parts/components (including the hierarchy or naming of components), or the \textit{material slots} (as opposed to the actual materials, which are set in UE4) that are baked into its FBX file. For these types of tasks, we highly recommend using the free 3D modeling software Blender. See Appendix~\ref{apdx:blender} for more information about Blender. Modifying the geometry of a mesh can be a complex task and is a very broad topic, so we will not cover it in this text. To change the organization of a mesh's components or its material slots, a brief overview is given in Appendix~\ref{apdx:blender}.
